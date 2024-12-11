@@ -1,11 +1,176 @@
 ---
-title: "NLP-word2vec"
+title: "Resultados dos Testes com Word2Vec"
+author: "Vinícius Alexandre da Silva"
 ---
 
-This is a Quarto website.
+# Hiper-Parâmtros utilizados
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+Após rodar o Word2Vec com os seguintes hiper-parâmtros:
 
-```{r}
-1 + 1
+-   `Size`: 50, 100, 150, 200
+-   `Window`: 3, 5, 8, 10
+-   `Iterações`: 5, 8, 10, 20
+-   `CBOW` ou `Skip-Gram`
+
+Tendo no total 128 configurações diferentes.
+
+# Tabela de Resultados
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+results = pd.read_csv("results.csv")
+results
 ```
+
+Temos essa tabela com o resultados.
+
+## Cálculo da Raiz quadrada do erro-médio (RMSE)
+
+O cálculo do `RMSE` foi feito a partir da Distância Cosseno dos valores previstos e os reais.
+
+$RMSE = \sqrt{\frac{1}{n}\sum_{i=1}^{n}(dist_{cos}(y,\hat{y}))^2}$
+
+$Dist_{cos} = 1 - \frac{y \cdot \hat{y}}{\left\| y \right\|\left\| \hat{y} \right\|}$
+
+# Melhor e Pior Resultado
+
+Primeiramente vamos ver o melhor e pior resultados:
+
+```{python}
+best_result = results.loc[results["RMSE"].idxmin()]
+print(best_result)
+```
+
+```{python}
+worst_result = results.loc[results["RMSE"].idxmax()]
+print(worst_result)
+```
+
+Como vamos ver, valores menores de hiper-parâmetros e o uso de skip-gram tendem a ter resultados melhores.
+
+# Gráficos
+
+```{python}
+cbow_data = results[results["CBOW or Skip-gram"] == "CBOW"]
+skipgram_data = results[results["CBOW or Skip-gram"] == "Skip-Gram"]
+figsize = (14, 4)
+xlim = (0.65, 1.15)
+palette = "tab10"
+```
+
+## Skip-Gram vs CBOW
+
+Skip-Gram tende a resultar em melhores resultados que CBOW.
+
+```{python}
+plt.figure(figsize=figsize)
+sns.violinplot(
+    results, x="RMSE", hue="CBOW or Skip-gram", inner="stick", palette=palette
+)
+plt.xlabel("RMSE")
+plt.title("Comparação de RMSE entre CBOW ou Skip-gram")
+plt.legend(loc="upper left")
+plt.xlim(xlim)
+plt.show()
+```
+
+## Comparação por tamanho de janela (Window)
+
+```{python}
+plt.figure(figsize=figsize)
+sns.violinplot(results, x="RMSE", hue="Window", inner="stick", palette=palette)
+plt.xlabel("RMSE")
+plt.title("RMSE por Window")
+plt.legend(loc="lower left")
+plt.xlim(xlim)
+plt.show()
+```
+Há uma pequena vantagem com janelas menores
+
+```{python}
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig.suptitle("RMSE por Window")
+fig.set_size_inches(figsize)
+sns.violinplot(
+    cbow_data, x="RMSE", hue="Window", inner="stick", palette=palette, ax=ax1
+)
+ax1.set_title("CBOW")
+ax1.set_xlabel("RMSE")
+ax1.set_xlim(xlim)
+ax1.legend(loc="lower left")
+sns.violinplot(
+    skipgram_data, x="RMSE", hue="Window", inner="stick", palette=palette, ax=ax2
+)
+ax2.set_title("Skip-gram")
+ax2.set_xlabel("RMSE")
+ax2.set_xlim(xlim)
+ax2.legend(loc="lower left")
+plt.show()
+```
+Separando entre CBOW e Skip-Gram, temos a mesma tendência, com Skip-Gram com valores mais variados, porém menores que CBOW.
+
+## Comparação por Número de Iterações
+```{python}
+plt.figure(figsize=figsize)
+sns.violinplot(results, x="RMSE", hue="Iter", inner="stick", palette=palette)
+plt.xlabel("RMSE")
+plt.title("RMSE by Number of Iterations")
+plt.legend(loc="lower left")
+plt.xlim(xlim)
+plt.show()
+```
+Há uma pequena vantagem com menos iterações, indicando que um número alto possa causar overfitting.
+```{python}
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig.suptitle("RMSE by Number of Iterations")
+fig.set_size_inches(figsize)
+sns.violinplot(cbow_data, x="RMSE", hue="Iter", inner="stick", palette=palette, ax=ax1)
+ax1.set_title("CBOW")
+ax1.set_xlabel("RMSE")
+ax1.set_xlim(xlim)
+ax1.legend(loc="lower left")
+sns.violinplot(
+    skipgram_data, x="RMSE", hue="Iter", inner="stick", palette=palette, ax=ax2
+)
+ax2.set_title("Skip-gram")
+ax2.set_xlabel("RMSE")
+ax2.set_xlim(xlim)
+ax2.legend(loc="lower left")
+plt.show()
+```
+Vemos quase nenhuma diferença em CBOW, mas uma diferença perceptível em Skip-Gram, mostrando as diferenças na rapidez de convergência entre os dois algoritmos.
+CBOW, sendo mais lento, requer um número de iterações bem maior para atingir o que Skip-Gram atinge com um número pequeno de iterações.
+
+## Comparação por Tamanho do Embedding (Size)
+```{python}
+plt.figure(figsize=figsize)
+sns.violinplot(results, x="RMSE", hue="Size", inner="stick", palette=palette)
+plt.xlabel("RMSE")
+plt.title("RMSE by Embedding Size")
+plt.legend(loc="lower left")
+plt.xlim(xlim)
+plt.show()
+```
+
+```{python}
+fig, (ax1, ax2) = plt.subplots(1, 2)
+fig.suptitle("RMSE by Embedding Size")
+fig.set_size_inches(figsize)
+sns.violinplot(cbow_data, x="RMSE", hue="Size", inner="stick", palette=palette, ax=ax1)
+ax1.set_title("CBOW")
+ax1.set_xlabel("RMSE")
+ax1.set_xlim(xlim)
+ax1.legend(loc="lower left")
+sns.violinplot(
+    skipgram_data, x="RMSE", hue="Size", inner="stick", palette=palette, ax=ax2
+)
+ax2.set_title("Skip-gram")
+ax2.set_xlabel("RMSE")
+ax2.set_xlim(xlim)
+ax2.legend(loc="lower left")
+plt.show()
+```
+Temos um melhor resultado com `Size` = 50, com maior diferença em Skip-Gram do que CBOW.

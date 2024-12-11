@@ -13,3 +13,7 @@ RnwWeave: Sweave
 LaTeX: pdfLaTeX
 
 BuildType: Makefile
+
+PythonType: system
+PythonVersion: 3.13.1
+PythonPath: C:/Users/vinic/AppData/Local/Programs/Python/Python313/python.exe
