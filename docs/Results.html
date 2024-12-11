@@ -149,16 +149,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="cell-0" class="cell" data-executioninfo="{&quot;elapsed&quot;:237,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746300948,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="16">
+<div id="cell-0" class="cell" data-executioninfo="{&quot;elapsed&quot;:237,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746300948,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-1" class="cell" data-executioninfo="{&quot;elapsed&quot;:251,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746302104,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="08e9247a-5112-4a2d-b7ca-28992ab09d3d" data-execution_count="17">
+<div id="cell-1" class="cell" data-executioninfo="{&quot;elapsed&quot;:251,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746302104,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="08e9247a-5112-4a2d-b7ca-28992ab09d3d" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> pd.read_csv(<span class="st">"results.csv"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>results</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="17">
+<div class="cell-output cell-output-display" data-execution_count="2">
 <div>
 
 
@@ -269,27 +269,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-2" class="cell" data-executioninfo="{&quot;elapsed&quot;:252,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746515617,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="18">
+<div id="cell-2" class="cell" data-executioninfo="{&quot;elapsed&quot;:252,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746515617,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="31">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>cbow_data <span class="op">=</span> results[results[<span class="st">"CBOW or Skip-gram"</span>] <span class="op">==</span> <span class="st">"CBOW"</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>skipgram_data <span class="op">=</span> results[results[<span class="st">"CBOW or Skip-gram"</span>] <span class="op">==</span> <span class="st">"Skip-Gram"</span>]</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>figsize <span class="op">=</span> (<span class="dv">14</span>, <span class="dv">4</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>xlim <span class="op">=</span> (<span class="fl">0.65</span>, <span class="fl">1.15</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>palette <span class="op">=</span> <span class="st">"tab10"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>figsize <span class="op">=</span> (<span class="dv">4</span>, <span class="dv">10</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>figmulti <span class="op">=</span> (<span class="dv">4</span>, <span class="dv">12</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>lim <span class="op">=</span> (<span class="fl">0.65</span>, <span class="fl">1.15</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>palette <span class="op">=</span> <span class="st">"tab10"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="cell-3" class="cell" data-executioninfo="{&quot;elapsed&quot;:402,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746517012,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="9423bd7d-bd04-4c90-8a1e-17f5524c3084" data-execution_count="19">
+<div id="cell-3" class="cell" data-executioninfo="{&quot;elapsed&quot;:402,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746517012,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="9423bd7d-bd04-4c90-8a1e-17f5524c3084">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>figsize)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    results,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"CBOW or Skip-gram"</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Comparação de RMSE entre CBOW ou Skip-gram"</span>)</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper left"</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>plt.xlim(xlim)</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    results, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"CBOW or Skip-gram"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Comparação de RMSE entre CBOW ou Skip-gram"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"upper left"</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>plt.ylim(lim)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -298,20 +295,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-4" class="cell" data-executioninfo="{&quot;elapsed&quot;:671,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746519549,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="b14036b8-0de0-4899-b94f-15332533e0dc" data-execution_count="20">
+<div id="cell-4" class="cell" data-executioninfo="{&quot;elapsed&quot;:671,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746519549,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="b14036b8-0de0-4899-b94f-15332533e0dc" data-execution_count="38">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>figsize)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    results,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Window"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE por Window"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>plt.xlim(xlim)</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(results, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Window"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE por Window"</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>plt.ylim(lim)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -320,38 +311,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-5" class="cell" data-executioninfo="{&quot;elapsed&quot;:1346,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746572116,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="34da0c8c-3bb1-4ba7-9541-c7ff991939ff" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<div id="cell-5" class="cell" data-executioninfo="{&quot;elapsed&quot;:1346,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746572116,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="34da0c8c-3bb1-4ba7-9541-c7ff991939ff">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"RMSE por Window"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figsize)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    cbow_data,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Window"</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax1,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>ax1.set_xlim(xlim)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    skipgram_data,</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Window"</span>,</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax2,</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(xlim)</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figmulti)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    cbow_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Window"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax1</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>ax1.set_ylim(lim)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    skipgram_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Window"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax2</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>ax2.set_ylim(lim)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -360,20 +338,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-6" class="cell" data-executioninfo="{&quot;elapsed&quot;:560,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746590523,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="d5dbcbeb-6ee1-4536-a403-8e695246bf7e" data-execution_count="22">
+<div id="cell-6" class="cell" data-executioninfo="{&quot;elapsed&quot;:560,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746590523,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="d5dbcbeb-6ee1-4536-a403-8e695246bf7e">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>figsize)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    results,</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Iter"</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE by Number of Iterations"</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.xlim(xlim)</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(results, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Iter"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE by Number of Iterations"</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>plt.ylim(lim)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -382,38 +354,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-7" class="cell" data-executioninfo="{&quot;elapsed&quot;:713,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746625408,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="3c601cf9-1d89-4421-83d8-3b732af7145a" data-execution_count="23">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<div id="cell-7" class="cell" data-executioninfo="{&quot;elapsed&quot;:713,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746625408,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="3c601cf9-1d89-4421-83d8-3b732af7145a">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"RMSE by Number of Iterations"</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figsize)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    cbow_data,</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Iter"</span>,</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax1,</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>ax1.set_xlim(xlim)</span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    skipgram_data,</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Iter"</span>,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax2,</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(xlim)</span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figmulti)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>sns.violinplot(cbow_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Iter"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax1)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>ax1.set_ylim(lim)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    skipgram_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Iter"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax2</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>ax2.set_ylim(lim)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -422,20 +379,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-8" class="cell" data-executioninfo="{&quot;elapsed&quot;:680,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746648033,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="cf089232-a6b8-43e7-dcf4-39745e3e814e" data-execution_count="24">
+<div id="cell-8" class="cell" data-executioninfo="{&quot;elapsed&quot;:680,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746648033,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="cf089232-a6b8-43e7-dcf4-39745e3e814e" data-execution_count="41">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>figsize)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    results,</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Size"</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE by Embedding Size"</span>)</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>plt.xlim(xlim)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>sns.violinplot(results, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Size"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"RMSE by Embedding Size"</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>plt.ylim(lim)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
@@ -444,38 +395,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<div id="cell-9" class="cell" data-executioninfo="{&quot;elapsed&quot;:962,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746679229,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="529ab312-6773-48b7-9f8e-ec3fd3255d82" data-execution_count="25">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<div id="cell-9" class="cell" data-executioninfo="{&quot;elapsed&quot;:962,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1733746679229,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="529ab312-6773-48b7-9f8e-ec3fd3255d82" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>fig, (ax1, ax2) <span class="op">=</span> plt.subplots(<span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>fig.suptitle(<span class="st">"RMSE by Embedding Size"</span>)</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figsize)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    cbow_data,</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Size"</span>,</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax1,</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>ax1.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>ax1.set_xlim(xlim)</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    skipgram_data,</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="st">"RMSE"</span>,</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    hue<span class="op">=</span><span class="st">"Size"</span>,</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    inner<span class="op">=</span><span class="st">"stick"</span>,</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    palette<span class="op">=</span>palette,</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax2,</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>ax2.set_xlabel(<span class="st">"RMSE"</span>)</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>ax2.set_xlim(xlim)</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower left"</span>)</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>fig.set_size_inches(figmulti)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sns.violinplot(cbow_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Size"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax1)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>ax1.set_title(<span class="st">"CBOW"</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>ax1.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>ax1.set_ylim(lim)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>ax1.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>sns.violinplot(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    skipgram_data, y<span class="op">=</span><span class="st">"RMSE"</span>, hue<span class="op">=</span><span class="st">"Size"</span>, inner<span class="op">=</span><span class="st">"stick"</span>, palette<span class="op">=</span>palette, ax<span class="op">=</span>ax2</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>ax2.set_title(<span class="st">"Skip-gram"</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>ax2.set_ylabel(<span class="st">"RMSE"</span>)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>ax2.set_ylim(lim)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>ax2.legend(loc<span class="op">=</span><span class="st">"lower right"</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
