@@ -88,6 +88,7 @@ plt.legend(loc="lower left")
 plt.xlim(xlim)
 plt.show()
 ```
+
 Há uma pequena vantagem com janelas menores
 
 ```{python}
@@ -110,9 +111,11 @@ ax2.set_xlim(xlim)
 ax2.legend(loc="lower left")
 plt.show()
 ```
+
 Separando entre CBOW e Skip-Gram, temos a mesma tendência, com Skip-Gram com valores mais variados, porém menores que CBOW.
 
 ## Comparação por Número de Iterações
+
 ```{python}
 plt.figure(figsize=figsize)
 sns.violinplot(results, x="RMSE", hue="Iter", inner="stick", palette=palette)
@@ -122,7 +125,9 @@ plt.legend(loc="lower left")
 plt.xlim(xlim)
 plt.show()
 ```
+
 Há uma pequena vantagem com menos iterações, indicando que um número alto possa causar overfitting.
+
 ```{python}
 fig, (ax1, ax2) = plt.subplots(1, 2)
 fig.suptitle("RMSE by Number of Iterations")
@@ -141,10 +146,11 @@ ax2.set_xlim(xlim)
 ax2.legend(loc="lower left")
 plt.show()
 ```
-Vemos quase nenhuma diferença em CBOW, mas uma diferença perceptível em Skip-Gram, mostrando as diferenças na rapidez de convergência entre os dois algoritmos.
-CBOW, sendo mais lento, requer um número de iterações bem maior para atingir o que Skip-Gram atinge com um número pequeno de iterações.
+
+Vemos quase nenhuma diferença em CBOW, mas uma diferença perceptível em Skip-Gram, mostrando as diferenças na rapidez de convergência entre os dois algoritmos. CBOW, sendo mais lento, requer um número de iterações bem maior para atingir o que Skip-Gram atinge com um número pequeno de iterações.
 
 ## Comparação por Tamanho do Embedding (Size)
+
 ```{python}
 plt.figure(figsize=figsize)
 sns.violinplot(results, x="RMSE", hue="Size", inner="stick", palette=palette)
@@ -173,4 +179,5 @@ ax2.set_xlim(xlim)
 ax2.legend(loc="lower left")
 plt.show()
 ```
+
 Temos um melhor resultado com `Size` = 50, com maior diferença em Skip-Gram do que CBOW.

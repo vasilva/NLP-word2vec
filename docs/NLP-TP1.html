@@ -1,0 +1,2392 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.33">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>nlp-tp1 – NLP-word2vec</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-07ba0ad10f5680c660e360ac31d2f3b6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-233ee1069c06c051d1fb8077e0969f76.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">NLP-word2vec</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<div id="cell-0" class="cell" data-executioninfo="{&quot;elapsed&quot;:538,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732532030942,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> subprocess</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-1" class="cell" data-executioninfo="{&quot;elapsed&quot;:556,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732532112875,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>word2vec <span class="op">=</span> <span class="st">"./word2vec"</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sizes <span class="op">=</span> [<span class="dv">50</span>, <span class="dv">100</span>, <span class="dv">150</span>, <span class="dv">200</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>windows <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">10</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>iters <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">10</span>, <span class="dv">20</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>cbow <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-2" class="cell" data-executioninfo="{&quot;elapsed&quot;:403,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732532118179,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train(program, <span class="bu">input</span>, sizes, windows, iters, cbow):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    sample <span class="op">=</span> <span class="fl">1e-4</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    threads <span class="op">=</span> <span class="dv">16</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    negative <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    count <span class="op">=</span> <span class="bu">len</span>(sizes) <span class="op">*</span> <span class="bu">len</span>(windows) <span class="op">*</span> <span class="bu">len</span>(iters) <span class="op">*</span> <span class="bu">len</span>(cbow)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> size <span class="kw">in</span> sizes:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> window <span class="kw">in</span> windows:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> <span class="bu">iter</span> <span class="kw">in</span> iters:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                <span class="cf">for</span> c <span class="kw">in</span> cbow:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                    alg <span class="op">=</span> <span class="st">"cbow"</span> <span class="cf">if</span> c <span class="cf">else</span> <span class="st">"skip-gram"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                    output <span class="op">=</span> <span class="ss">f"output/size</span><span class="sc">{</span>size<span class="sc">}</span><span class="ss">_window</span><span class="sc">{</span>window<span class="sc">}</span><span class="ss">_iter</span><span class="sc">{</span><span class="bu">iter</span><span class="sc">}</span><span class="ss">_</span><span class="sc">{</span>alg<span class="sc">}</span><span class="ss">.txt"</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                    params <span class="op">=</span> {</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"output"</span>: output,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"size"</span>: <span class="bu">str</span>(size),</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"window"</span>: <span class="bu">str</span>(window),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"iter"</span>: <span class="bu">str</span>(<span class="bu">iter</span>),</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                        <span class="st">"cbow"</span>: <span class="bu">str</span>(c),</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="op">+</span><span class="dv">1</span><span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>count<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">50</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"Training with:"</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"Size:   </span><span class="sc">{</span>size<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"Window: </span><span class="sc">{</span>window<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="ss">f"Iter:   </span><span class="sc">{</span><span class="bu">iter</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="st">"CBOW"</span> <span class="cf">if</span> c <span class="cf">else</span> <span class="st">"Skip-Gram"</span>)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>                    <span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">50</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>                    i <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>                    w2v <span class="op">=</span> subprocess.run(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>                        [</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>                            program,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-train"</span>,</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">input</span>,</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-output"</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>                            params[<span class="st">"output"</span>],</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-size"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>                            params[<span class="st">"size"</span>],</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-window"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>                            params[<span class="st">"window"</span>],</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-iter"</span>,</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>                            params[<span class="st">"iter"</span>],</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-cbow"</span>,</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>                            params[<span class="st">"cbow"</span>],</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-sample"</span>,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">str</span>(sample),</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-threads"</span>,</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">str</span>(threads),</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>                            <span class="st">"-negative"</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>                            <span class="bu">str</span>(negative),</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>                        ],</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>                        stdout<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>                        stderr<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>                        text<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>                    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-3" class="cell" data-outputid="9e1ccfa1-0f39-476f-8b3e-8d869f0bf94d" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>download <span class="op">=</span> subprocess.run(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"./word2vec.sh"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    stdout<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    stderr<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    shell<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>train(word2vec, <span class="st">"text8"</span>, sizes, windows, iters, cbow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+2/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   5
+CBOW
+--------------------------------------------------
+3/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+4/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   8
+CBOW
+--------------------------------------------------
+5/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+6/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   10
+CBOW
+--------------------------------------------------
+7/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+8/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 3
+Iter:   20
+CBOW
+--------------------------------------------------
+9/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+10/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   5
+CBOW
+--------------------------------------------------
+11/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+12/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   8
+CBOW
+--------------------------------------------------
+13/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+14/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   10
+CBOW
+--------------------------------------------------
+15/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+16/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 5
+Iter:   20
+CBOW
+--------------------------------------------------
+17/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+18/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   5
+CBOW
+--------------------------------------------------
+19/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+20/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   8
+CBOW
+--------------------------------------------------
+21/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+22/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   10
+CBOW
+--------------------------------------------------
+23/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+24/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 8
+Iter:   20
+CBOW
+--------------------------------------------------
+25/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+26/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   5
+CBOW
+--------------------------------------------------
+27/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+28/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   8
+CBOW
+--------------------------------------------------
+29/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+30/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   10
+CBOW
+--------------------------------------------------
+31/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+32/128
+--------------------------------------------------
+Training with:
+Size:   50
+Window: 10
+Iter:   20
+CBOW
+--------------------------------------------------
+33/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+34/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   5
+CBOW
+--------------------------------------------------
+35/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+36/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   8
+CBOW
+--------------------------------------------------
+37/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+38/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   10
+CBOW
+--------------------------------------------------
+39/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+40/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 3
+Iter:   20
+CBOW
+--------------------------------------------------
+41/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+42/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   5
+CBOW
+--------------------------------------------------
+43/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+44/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   8
+CBOW
+--------------------------------------------------
+45/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+46/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   10
+CBOW
+--------------------------------------------------
+47/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+48/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 5
+Iter:   20
+CBOW
+--------------------------------------------------
+49/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+50/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   5
+CBOW
+--------------------------------------------------
+51/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+52/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   8
+CBOW
+--------------------------------------------------
+53/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+54/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   10
+CBOW
+--------------------------------------------------
+55/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+56/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 8
+Iter:   20
+CBOW
+--------------------------------------------------
+57/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+58/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   5
+CBOW
+--------------------------------------------------
+59/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+60/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   8
+CBOW
+--------------------------------------------------
+61/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+62/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   10
+CBOW
+--------------------------------------------------
+63/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+64/128
+--------------------------------------------------
+Training with:
+Size:   100
+Window: 10
+Iter:   20
+CBOW
+--------------------------------------------------
+65/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+66/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   5
+CBOW
+--------------------------------------------------
+67/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+68/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   8
+CBOW
+--------------------------------------------------
+69/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+70/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   10
+CBOW
+--------------------------------------------------
+71/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+72/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 3
+Iter:   20
+CBOW
+--------------------------------------------------
+73/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+74/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   5
+CBOW
+--------------------------------------------------
+75/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+76/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   8
+CBOW
+--------------------------------------------------
+77/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+78/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   10
+CBOW
+--------------------------------------------------
+79/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+80/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 5
+Iter:   20
+CBOW
+--------------------------------------------------
+81/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+82/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   5
+CBOW
+--------------------------------------------------
+83/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+84/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   8
+CBOW
+--------------------------------------------------
+85/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+86/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   10
+CBOW
+--------------------------------------------------
+87/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+88/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 8
+Iter:   20
+CBOW
+--------------------------------------------------
+89/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+90/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   5
+CBOW
+--------------------------------------------------
+91/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+92/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   8
+CBOW
+--------------------------------------------------
+93/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+94/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   10
+CBOW
+--------------------------------------------------
+95/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+96/128
+--------------------------------------------------
+Training with:
+Size:   150
+Window: 10
+Iter:   20
+CBOW
+--------------------------------------------------
+97/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+98/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   5
+CBOW
+--------------------------------------------------
+99/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+100/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   8
+CBOW
+--------------------------------------------------
+101/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+102/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   10
+CBOW
+--------------------------------------------------
+103/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+104/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 3
+Iter:   20
+CBOW
+--------------------------------------------------
+105/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+106/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   5
+CBOW
+--------------------------------------------------
+107/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+108/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   8
+CBOW
+--------------------------------------------------
+109/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+110/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   10
+CBOW
+--------------------------------------------------
+111/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+112/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 5
+Iter:   20
+CBOW
+--------------------------------------------------
+113/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+114/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   5
+CBOW
+--------------------------------------------------
+115/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+116/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   8
+CBOW
+--------------------------------------------------
+117/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+118/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   10
+CBOW
+--------------------------------------------------
+119/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+120/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 8
+Iter:   20
+CBOW
+--------------------------------------------------
+121/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   5
+Skip-Gram
+--------------------------------------------------
+122/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   5
+CBOW
+--------------------------------------------------
+123/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   8
+Skip-Gram
+--------------------------------------------------
+124/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   8
+CBOW
+--------------------------------------------------
+125/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   10
+Skip-Gram
+--------------------------------------------------
+126/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   10
+CBOW
+--------------------------------------------------
+127/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   20
+Skip-Gram
+--------------------------------------------------
+128/128
+--------------------------------------------------
+Training with:
+Size:   200
+Window: 10
+Iter:   20
+CBOW
+--------------------------------------------------</code></pre>
+</div>
+</div>
+<div id="cell-4" class="cell" data-executioninfo="{&quot;elapsed&quot;:395,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732532127563,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="e374036d-7d84-4796-8827-00be9174abd9" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>output_path <span class="op">=</span> <span class="st">"output"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>files <span class="op">=</span> subprocess.run(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    [<span class="st">"ls"</span>, output_path],</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    stdout<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    stderr<span class="op">=</span>subprocess.PIPE,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    text<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>files_list <span class="op">=</span> files.stdout.split()</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>files_list</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>['size100_window10_iter10_cbow.txt',
+ 'size100_window10_iter10_skip-gram.txt',
+ 'size100_window10_iter20_cbow.txt',
+ 'size100_window10_iter20_skip-gram.txt',
+ 'size100_window10_iter5_cbow.txt',
+ 'size100_window10_iter5_skip-gram.txt',
+ 'size100_window10_iter8_cbow.txt',
+ 'size100_window10_iter8_skip-gram.txt',
+ 'size100_window3_iter10_cbow.txt',
+ 'size100_window3_iter10_skip-gram.txt',
+ 'size100_window3_iter20_cbow.txt',
+ 'size100_window3_iter20_skip-gram.txt',
+ 'size100_window3_iter5_cbow.txt',
+ 'size100_window3_iter5_skip-gram.txt',
+ 'size100_window3_iter8_cbow.txt',
+ 'size100_window3_iter8_skip-gram.txt',
+ 'size100_window5_iter10_cbow.txt',
+ 'size100_window5_iter10_skip-gram.txt',
+ 'size100_window5_iter20_cbow.txt',
+ 'size100_window5_iter20_skip-gram.txt',
+ 'size100_window5_iter5_cbow.txt',
+ 'size100_window5_iter5_skip-gram.txt',
+ 'size100_window5_iter8_cbow.txt',
+ 'size100_window5_iter8_skip-gram.txt',
+ 'size100_window8_iter10_cbow.txt',
+ 'size100_window8_iter10_skip-gram.txt',
+ 'size100_window8_iter20_cbow.txt',
+ 'size100_window8_iter20_skip-gram.txt',
+ 'size100_window8_iter5_cbow.txt',
+ 'size100_window8_iter5_skip-gram.txt',
+ 'size100_window8_iter8_cbow.txt',
+ 'size100_window8_iter8_skip-gram.txt',
+ 'size150_window10_iter10_cbow.txt',
+ 'size150_window10_iter10_skip-gram.txt',
+ 'size150_window10_iter20_cbow.txt',
+ 'size150_window10_iter20_skip-gram.txt',
+ 'size150_window10_iter5_cbow.txt',
+ 'size150_window10_iter5_skip-gram.txt',
+ 'size150_window10_iter8_cbow.txt',
+ 'size150_window10_iter8_skip-gram.txt',
+ 'size150_window3_iter10_cbow.txt',
+ 'size150_window3_iter10_skip-gram.txt',
+ 'size150_window3_iter20_cbow.txt',
+ 'size150_window3_iter20_skip-gram.txt',
+ 'size150_window3_iter5_cbow.txt',
+ 'size150_window3_iter5_skip-gram.txt',
+ 'size150_window3_iter8_cbow.txt',
+ 'size150_window3_iter8_skip-gram.txt',
+ 'size150_window5_iter10_cbow.txt',
+ 'size150_window5_iter10_skip-gram.txt',
+ 'size150_window5_iter20_cbow.txt',
+ 'size150_window5_iter20_skip-gram.txt',
+ 'size150_window5_iter5_cbow.txt',
+ 'size150_window5_iter5_skip-gram.txt',
+ 'size150_window5_iter8_cbow.txt',
+ 'size150_window5_iter8_skip-gram.txt',
+ 'size150_window8_iter10_cbow.txt',
+ 'size150_window8_iter10_skip-gram.txt',
+ 'size150_window8_iter20_cbow.txt',
+ 'size150_window8_iter20_skip-gram.txt',
+ 'size150_window8_iter5_cbow.txt',
+ 'size150_window8_iter5_skip-gram.txt',
+ 'size150_window8_iter8_cbow.txt',
+ 'size150_window8_iter8_skip-gram.txt',
+ 'size200_window10_iter10_cbow.txt',
+ 'size200_window10_iter10_skip-gram.txt',
+ 'size200_window10_iter20_cbow.txt',
+ 'size200_window10_iter20_skip-gram.txt',
+ 'size200_window10_iter5_cbow.txt',
+ 'size200_window10_iter5_skip-gram.txt',
+ 'size200_window10_iter8_cbow.txt',
+ 'size200_window10_iter8_skip-gram.txt',
+ 'size200_window3_iter10_cbow.txt',
+ 'size200_window3_iter10_skip-gram.txt',
+ 'size200_window3_iter20_cbow.txt',
+ 'size200_window3_iter20_skip-gram.txt',
+ 'size200_window3_iter5_cbow.txt',
+ 'size200_window3_iter5_skip-gram.txt',
+ 'size200_window3_iter8_cbow.txt',
+ 'size200_window3_iter8_skip-gram.txt',
+ 'size200_window5_iter10_cbow.txt',
+ 'size200_window5_iter10_skip-gram.txt',
+ 'size200_window5_iter20_cbow.txt',
+ 'size200_window5_iter20_skip-gram.txt',
+ 'size200_window5_iter5_cbow.txt',
+ 'size200_window5_iter5_skip-gram.txt',
+ 'size200_window5_iter8_cbow.txt',
+ 'size200_window5_iter8_skip-gram.txt',
+ 'size200_window8_iter10_cbow.txt',
+ 'size200_window8_iter10_skip-gram.txt',
+ 'size200_window8_iter20_cbow.txt',
+ 'size200_window8_iter20_skip-gram.txt',
+ 'size200_window8_iter5_cbow.txt',
+ 'size200_window8_iter5_skip-gram.txt',
+ 'size200_window8_iter8_cbow.txt',
+ 'size200_window8_iter8_skip-gram.txt',
+ 'size50_window10_iter10_cbow.txt',
+ 'size50_window10_iter10_skip-gram.txt',
+ 'size50_window10_iter20_cbow.txt',
+ 'size50_window10_iter20_skip-gram.txt',
+ 'size50_window10_iter5_cbow.txt',
+ 'size50_window10_iter5_skip-gram.txt',
+ 'size50_window10_iter8_cbow.txt',
+ 'size50_window10_iter8_skip-gram.txt',
+ 'size50_window3_iter10_cbow.txt',
+ 'size50_window3_iter10_skip-gram.txt',
+ 'size50_window3_iter20_cbow.txt',
+ 'size50_window3_iter20_skip-gram.txt',
+ 'size50_window3_iter5_cbow.txt',
+ 'size50_window3_iter5_skip-gram.txt',
+ 'size50_window3_iter8_cbow.txt',
+ 'size50_window3_iter8_skip-gram.txt',
+ 'size50_window5_iter10_cbow.txt',
+ 'size50_window5_iter10_skip-gram.txt',
+ 'size50_window5_iter20_cbow.txt',
+ 'size50_window5_iter20_skip-gram.txt',
+ 'size50_window5_iter5_cbow.txt',
+ 'size50_window5_iter5_skip-gram.txt',
+ 'size50_window5_iter8_cbow.txt',
+ 'size50_window5_iter8_skip-gram.txt',
+ 'size50_window8_iter10_cbow.txt',
+ 'size50_window8_iter10_skip-gram.txt',
+ 'size50_window8_iter20_cbow.txt',
+ 'size50_window8_iter20_skip-gram.txt',
+ 'size50_window8_iter5_cbow.txt',
+ 'size50_window8_iter5_skip-gram.txt',
+ 'size50_window8_iter8_cbow.txt',
+ 'size50_window8_iter8_skip-gram.txt']</code></pre>
+</div>
+</div>
+<div id="cell-5" class="cell" data-executioninfo="{&quot;elapsed&quot;:466,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732532158305,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cosine_distance(u, v):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    uv <span class="op">=</span> np.dot(u, v)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    u_norm <span class="op">=</span> np.linalg.norm(u)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    v_norm <span class="op">=</span> np.linalg.norm(v)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">-</span> (uv <span class="op">/</span> (u_norm <span class="op">*</span> v_norm))</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_params(file_name):</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    size, window, <span class="bu">iter</span>, cbow <span class="op">=</span> file_name.split(<span class="st">"_"</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    size <span class="op">=</span> <span class="bu">int</span>(size[<span class="dv">4</span>:])</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> <span class="bu">int</span>(window[<span class="dv">6</span>:])</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">iter</span> <span class="op">=</span> <span class="bu">int</span>(<span class="bu">iter</span>[<span class="dv">4</span>:])</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    cbow <span class="op">=</span> <span class="st">"CBOW"</span> <span class="cf">if</span> cbow[:<span class="dv">4</span>] <span class="op">==</span> <span class="st">"cbow"</span> <span class="cf">else</span> <span class="st">"Skip-Gram"</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> size, window, <span class="bu">iter</span>, cbow</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_data(file_path):</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> {}</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(file_path, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        n_words, n_dim <span class="op">=</span> f.readline().split()</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        n_words, n_dim <span class="op">=</span> <span class="bu">int</span>(n_words), <span class="bu">int</span>(n_dim)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n_words):</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            line <span class="op">=</span> f.readline().split()</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            word <span class="op">=</span> line[<span class="dv">0</span>]</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            vec <span class="op">=</span> np.array(line[<span class="dv">1</span>:], dtype<span class="op">=</span><span class="bu">float</span>)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            words[word] <span class="op">=</span> vec</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> words</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rmse(lines, data):</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>    n_lines <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> lines:</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> line.startswith(<span class="st">":"</span>):</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        line <span class="op">=</span> line.lower()</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        word1, word2, word3, word4 <span class="op">=</span> line.split()</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>            word1 <span class="kw">not</span> <span class="kw">in</span> data</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>            <span class="kw">or</span> word2 <span class="kw">not</span> <span class="kw">in</span> data</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>            <span class="kw">or</span> word3 <span class="kw">not</span> <span class="kw">in</span> data</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>            <span class="kw">or</span> word4 <span class="kw">not</span> <span class="kw">in</span> data</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>        ):</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>        n_lines <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>        X <span class="op">=</span> data[word1] <span class="op">+</span> data[word2] <span class="op">-</span> data[word3]</span>
+<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>        Y <span class="op">=</span> data[word4]</span>
+<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>        rmse <span class="op">+=</span> cosine_distance(X, Y) <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    rmse <span class="op">=</span> np.sqrt(rmse <span class="op">/</span> n_lines)</span>
+<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rmse</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-6" class="cell" data-executioninfo="{&quot;elapsed&quot;:841832,&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:1732533678442,&quot;user&quot;:{&quot;displayName&quot;:&quot;Vinícius Alexandre&quot;,&quot;userId&quot;:&quot;02678239040136017208&quot;},&quot;user_tz&quot;:180}" data-outputid="b1de1526-1c18-470b-ac73-d75e5df14ed0" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(columns<span class="op">=</span>[<span class="st">"Size"</span>, <span class="st">"Window"</span>, <span class="st">"Iter"</span>, <span class="st">"CBOW or Skip-gram"</span>, <span class="st">"RMSE"</span>])</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"questions-words.txt"</span>, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> f.readlines()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> file_name <span class="kw">in</span> files_list:</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        size, window, <span class="bu">iter</span>, cbow <span class="op">=</span> get_params(file_name)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Size: </span><span class="sc">{</span>size<span class="sc">}</span><span class="ch">\t</span><span class="ss">Window: </span><span class="sc">{</span>window<span class="sc">}</span><span class="ch">\t</span><span class="ss">Iters: </span><span class="sc">{</span><span class="bu">iter</span><span class="sc">}</span><span class="ch">\t</span><span class="sc">{</span>cbow<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> get_data(output_path <span class="op">+</span> <span class="st">"/"</span> <span class="op">+</span> file_name)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        rmse_value <span class="op">=</span> rmse(lines, data)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        df.loc[<span class="bu">len</span>(df)] <span class="op">=</span> [size, window, <span class="bu">iter</span>, cbow, rmse_value]</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"RMSE for </span><span class="sc">{</span>file_name<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>rmse_value<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">50</span>)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"results.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Size: 100   Window: 10  Iters: 10   CBOW
+RMSE for size100_window10_iter10_cbow.txt: 1.0608072431572995
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 10   Skip-Gram
+RMSE for size100_window10_iter10_skip-gram.txt: 0.9337970723754218
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 20   CBOW
+RMSE for size100_window10_iter20_cbow.txt: 1.0578055783516787
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 20   Skip-Gram
+RMSE for size100_window10_iter20_skip-gram.txt: 0.9571166672319956
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 5    CBOW
+RMSE for size100_window10_iter5_cbow.txt: 1.0498213556300933
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 5    Skip-Gram
+RMSE for size100_window10_iter5_skip-gram.txt: 0.8962118623498666
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 8    CBOW
+RMSE for size100_window10_iter8_cbow.txt: 1.0595029350174505
+--------------------------------------------------
+Size: 100   Window: 10  Iters: 8    Skip-Gram
+RMSE for size100_window10_iter8_skip-gram.txt: 0.9237362164767721
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 10   CBOW
+RMSE for size100_window3_iter10_cbow.txt: 1.003183640491427
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 10   Skip-Gram
+RMSE for size100_window3_iter10_skip-gram.txt: 0.8799496656007177
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 20   CBOW
+RMSE for size100_window3_iter20_cbow.txt: 1.0073588280586616
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 20   Skip-Gram
+RMSE for size100_window3_iter20_skip-gram.txt: 0.9124507132207736
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 5    CBOW
+RMSE for size100_window3_iter5_cbow.txt: 0.9799940814960691
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 5    Skip-Gram
+RMSE for size100_window3_iter5_skip-gram.txt: 0.8221392538447317
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 8    CBOW
+RMSE for size100_window3_iter8_cbow.txt: 0.9981279748509562
+--------------------------------------------------
+Size: 100   Window: 3   Iters: 8    Skip-Gram
+RMSE for size100_window3_iter8_skip-gram.txt: 0.8644259347551662
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 10   CBOW
+RMSE for size100_window5_iter10_cbow.txt: 1.0284775234611025
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 10   Skip-Gram
+RMSE for size100_window5_iter10_skip-gram.txt: 0.9033965544940745
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 20   CBOW
+RMSE for size100_window5_iter20_cbow.txt: 1.0279661847845656
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 20   Skip-Gram
+RMSE for size100_window5_iter20_skip-gram.txt: 0.9315126881153434
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 5    CBOW
+RMSE for size100_window5_iter5_cbow.txt: 1.0116222231890029
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 5    Skip-Gram
+RMSE for size100_window5_iter5_skip-gram.txt: 0.852257720216367
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 8    CBOW
+RMSE for size100_window5_iter8_cbow.txt: 1.0253542887158287
+--------------------------------------------------
+Size: 100   Window: 5   Iters: 8    Skip-Gram
+RMSE for size100_window5_iter8_skip-gram.txt: 0.88987156710377
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 10   CBOW
+RMSE for size100_window8_iter10_cbow.txt: 1.0491256255571133
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 10   Skip-Gram
+RMSE for size100_window8_iter10_skip-gram.txt: 0.9238871356929454
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 20   CBOW
+RMSE for size100_window8_iter20_cbow.txt: 1.047134719368816
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 20   Skip-Gram
+RMSE for size100_window8_iter20_skip-gram.txt: 0.9481519570553025
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 5    CBOW
+RMSE for size100_window8_iter5_cbow.txt: 1.037742827603619
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 5    Skip-Gram
+RMSE for size100_window8_iter5_skip-gram.txt: 0.883317880167658
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 8    CBOW
+RMSE for size100_window8_iter8_cbow.txt: 1.0483355759887236
+--------------------------------------------------
+Size: 100   Window: 8   Iters: 8    Skip-Gram
+RMSE for size100_window8_iter8_skip-gram.txt: 0.9120327414648342
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 10   CBOW
+RMSE for size150_window10_iter10_cbow.txt: 1.063259074763475
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 10   Skip-Gram
+RMSE for size150_window10_iter10_skip-gram.txt: 0.9611500219243279
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 20   CBOW
+RMSE for size150_window10_iter20_cbow.txt: 1.0622636945098862
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 20   Skip-Gram
+RMSE for size150_window10_iter20_skip-gram.txt: 0.9816457863748487
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 5    CBOW
+RMSE for size150_window10_iter5_cbow.txt: 1.0492250947654322
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 5    Skip-Gram
+RMSE for size150_window10_iter5_skip-gram.txt: 0.9213463510275077
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 8    CBOW
+RMSE for size150_window10_iter8_cbow.txt: 1.0623321670413446
+--------------------------------------------------
+Size: 150   Window: 10  Iters: 8    Skip-Gram
+RMSE for size150_window10_iter8_skip-gram.txt: 0.9515830937909548
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 10   CBOW
+RMSE for size150_window3_iter10_cbow.txt: 1.012507505134589
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 10   Skip-Gram
+RMSE for size150_window3_iter10_skip-gram.txt: 0.9068443935311603
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 20   CBOW
+RMSE for size150_window3_iter20_cbow.txt: 1.0154674115397735
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 20   Skip-Gram
+RMSE for size150_window3_iter20_skip-gram.txt: 0.9409825286165548
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 5    CBOW
+RMSE for size150_window3_iter5_cbow.txt: 0.9857619708873464
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 5    Skip-Gram
+RMSE for size150_window3_iter5_skip-gram.txt: 0.8439187586914315
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 8    CBOW
+RMSE for size150_window3_iter8_cbow.txt: 1.0073203051642472
+--------------------------------------------------
+Size: 150   Window: 3   Iters: 8    Skip-Gram
+RMSE for size150_window3_iter8_skip-gram.txt: 0.8905680033585067
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 10   CBOW
+RMSE for size150_window5_iter10_cbow.txt: 1.0339111028032495
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 10   Skip-Gram
+RMSE for size150_window5_iter10_skip-gram.txt: 0.9304668741829217
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 20   CBOW
+RMSE for size150_window5_iter20_cbow.txt: 1.0357214912837032
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 20   Skip-Gram
+RMSE for size150_window5_iter20_skip-gram.txt: 0.960140805808419
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 5    CBOW
+RMSE for size150_window5_iter5_cbow.txt: 1.0156263893324424
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 5    Skip-Gram
+RMSE for size150_window5_iter5_skip-gram.txt: 0.8764349480787574
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 8    CBOW
+RMSE for size150_window5_iter8_cbow.txt: 1.032338330572276
+--------------------------------------------------
+Size: 150   Window: 5   Iters: 8    Skip-Gram
+RMSE for size150_window5_iter8_skip-gram.txt: 0.9173098095538992
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 10   CBOW
+RMSE for size150_window8_iter10_cbow.txt: 1.0539860986637393
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 10   Skip-Gram
+RMSE for size150_window8_iter10_skip-gram.txt: 0.9533490084193404
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 20   CBOW
+RMSE for size150_window8_iter20_cbow.txt: 1.0527399164209208
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 20   Skip-Gram
+RMSE for size150_window8_iter20_skip-gram.txt: 0.9753855971045977
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 5    CBOW
+RMSE for size150_window8_iter5_cbow.txt: 1.040519812143717
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 5    Skip-Gram
+RMSE for size150_window8_iter5_skip-gram.txt: 0.9083491867234134
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 8    CBOW
+RMSE for size150_window8_iter8_cbow.txt: 1.0526092693898308
+--------------------------------------------------
+Size: 150   Window: 8   Iters: 8    Skip-Gram
+RMSE for size150_window8_iter8_skip-gram.txt: 0.9407010726612751
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 10   CBOW
+RMSE for size200_window10_iter10_cbow.txt: 1.0629353619415312
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 10   Skip-Gram
+RMSE for size200_window10_iter10_skip-gram.txt: 0.9784927764947746
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 20   CBOW
+RMSE for size200_window10_iter20_cbow.txt: 1.0595934469418369
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 20   Skip-Gram
+RMSE for size200_window10_iter20_skip-gram.txt: 0.9968815744729956
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 5    CBOW
+RMSE for size200_window10_iter5_cbow.txt: 1.0511684732222788
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 5    Skip-Gram
+RMSE for size200_window10_iter5_skip-gram.txt: 0.934073174800572
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 8    CBOW
+RMSE for size200_window10_iter8_cbow.txt: 1.0623389844928233
+--------------------------------------------------
+Size: 200   Window: 10  Iters: 8    Skip-Gram
+RMSE for size200_window10_iter8_skip-gram.txt: 0.9679948395311491
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 10   CBOW
+RMSE for size200_window3_iter10_cbow.txt: 1.0160174298746723
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 10   Skip-Gram
+RMSE for size200_window3_iter10_skip-gram.txt: 0.9223025442400353
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 20   CBOW
+RMSE for size200_window3_iter20_cbow.txt: 1.0193537559684145
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 20   Skip-Gram
+RMSE for size200_window3_iter20_skip-gram.txt: 0.9551899253096425
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 5    CBOW
+RMSE for size200_window3_iter5_cbow.txt: 0.9892282780566476
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 5    Skip-Gram
+RMSE for size200_window3_iter5_skip-gram.txt: 0.8563193874405496
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 8    CBOW
+RMSE for size200_window3_iter8_cbow.txt: 1.0115382938013566
+--------------------------------------------------
+Size: 200   Window: 3   Iters: 8    Skip-Gram
+RMSE for size200_window3_iter8_skip-gram.txt: 0.9059715812425528
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 10   CBOW
+RMSE for size200_window5_iter10_cbow.txt: 1.0365755059861073
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 10   Skip-Gram
+RMSE for size200_window5_iter10_skip-gram.txt: 0.9464211342369363
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 20   CBOW
+RMSE for size200_window5_iter20_cbow.txt: 1.0374689077235255
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 20   Skip-Gram
+RMSE for size200_window5_iter20_skip-gram.txt: 0.9749472962808433
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 5    CBOW
+RMSE for size200_window5_iter5_cbow.txt: 1.0174557618953253
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 5    Skip-Gram
+RMSE for size200_window5_iter5_skip-gram.txt: 0.8888564749398555
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 8    CBOW
+RMSE for size200_window5_iter8_cbow.txt: 1.0344028410703556
+--------------------------------------------------
+Size: 200   Window: 5   Iters: 8    Skip-Gram
+RMSE for size200_window5_iter8_skip-gram.txt: 0.9310534921092258
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 10   CBOW
+RMSE for size200_window8_iter10_cbow.txt: 1.0540356908211423
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 10   Skip-Gram
+RMSE for size200_window8_iter10_skip-gram.txt: 0.9695886423070053
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 20   CBOW
+RMSE for size200_window8_iter20_cbow.txt: 1.0536584208671982
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 20   Skip-Gram
+RMSE for size200_window8_iter20_skip-gram.txt: 0.9910259999218408
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 5    CBOW
+RMSE for size200_window8_iter5_cbow.txt: 1.0395593071312703
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 5    Skip-Gram
+RMSE for size200_window8_iter5_skip-gram.txt: 0.9216620030336532
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 8    CBOW
+RMSE for size200_window8_iter8_cbow.txt: 1.0532401846380324
+--------------------------------------------------
+Size: 200   Window: 8   Iters: 8    Skip-Gram
+RMSE for size200_window8_iter8_skip-gram.txt: 0.9561686813566039
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 10   CBOW
+RMSE for size50_window10_iter10_cbow.txt: 1.0434515682230292
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 10   Skip-Gram
+RMSE for size50_window10_iter10_skip-gram.txt: 0.8783443645442943
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 20   CBOW
+RMSE for size50_window10_iter20_cbow.txt: 1.0420719694375877
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 20   Skip-Gram
+RMSE for size50_window10_iter20_skip-gram.txt: 0.8977145857913683
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 5    CBOW
+RMSE for size50_window10_iter5_cbow.txt: 1.036661326181128
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 5    Skip-Gram
+RMSE for size50_window10_iter5_skip-gram.txt: 0.8446325744516411
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 8    CBOW
+RMSE for size50_window10_iter8_cbow.txt: 1.0413860942909225
+--------------------------------------------------
+Size: 50    Window: 10  Iters: 8    Skip-Gram
+RMSE for size50_window10_iter8_skip-gram.txt: 0.8706217369463337
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 10   CBOW
+RMSE for size50_window3_iter10_cbow.txt: 0.9738840784608971
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 10   Skip-Gram
+RMSE for size50_window3_iter10_skip-gram.txt: 0.8208627204977341
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 20   CBOW
+RMSE for size50_window3_iter20_cbow.txt: 0.9797872557500472
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 20   Skip-Gram
+RMSE for size50_window3_iter20_skip-gram.txt: 0.8551915431625772
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 5    CBOW
+RMSE for size50_window3_iter5_cbow.txt: 0.9568570198724478
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 5    Skip-Gram
+RMSE for size50_window3_iter5_skip-gram.txt: 0.7706486557794527
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 8    CBOW
+RMSE for size50_window3_iter8_cbow.txt: 0.9699837812885634
+--------------------------------------------------
+Size: 50    Window: 3   Iters: 8    Skip-Gram
+RMSE for size50_window3_iter8_skip-gram.txt: 0.8070687058540716
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 10   CBOW
+RMSE for size50_window5_iter10_cbow.txt: 1.006532128325851
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 10   Skip-Gram
+RMSE for size50_window5_iter10_skip-gram.txt: 0.8445945933518111
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 20   CBOW
+RMSE for size50_window5_iter20_cbow.txt: 1.0059233324468724
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 20   Skip-Gram
+RMSE for size50_window5_iter20_skip-gram.txt: 0.8761347597971316
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 5    CBOW
+RMSE for size50_window5_iter5_cbow.txt: 0.9930152916615671
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 5    Skip-Gram
+RMSE for size50_window5_iter5_skip-gram.txt: 0.8026797015401617
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 8    CBOW
+RMSE for size50_window5_iter8_cbow.txt: 1.0014074758181157
+--------------------------------------------------
+Size: 50    Window: 5   Iters: 8    Skip-Gram
+RMSE for size50_window5_iter8_skip-gram.txt: 0.8339356615319082
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 10   CBOW
+RMSE for size50_window8_iter10_cbow.txt: 1.0321592254185932
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 10   Skip-Gram
+RMSE for size50_window8_iter10_skip-gram.txt: 0.8700844133201976
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 20   CBOW
+RMSE for size50_window8_iter20_cbow.txt: 1.0293329379861695
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 20   Skip-Gram
+RMSE for size50_window8_iter20_skip-gram.txt: 0.8927880961277289
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 5    CBOW
+RMSE for size50_window8_iter5_cbow.txt: 1.0244647431919836
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 5    Skip-Gram
+RMSE for size50_window8_iter5_skip-gram.txt: 0.8341419907196123
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 8    CBOW
+RMSE for size50_window8_iter8_cbow.txt: 1.0310175468652596
+--------------------------------------------------
+Size: 50    Window: 8   Iters: 8    Skip-Gram
+RMSE for size50_window8_iter8_skip-gram.txt: 0.8606369678667629
+--------------------------------------------------</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Size</th>
+<th data-quarto-table-cell-role="th">Window</th>
+<th data-quarto-table-cell-role="th">Iter</th>
+<th data-quarto-table-cell-role="th">CBOW or Skip-gram</th>
+<th data-quarto-table-cell-role="th">RMSE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>100</td>
+<td>10</td>
+<td>10</td>
+<td>CBOW</td>
+<td>1.060807</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>100</td>
+<td>10</td>
+<td>10</td>
+<td>Skip-Gram</td>
+<td>0.933797</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>100</td>
+<td>10</td>
+<td>20</td>
+<td>CBOW</td>
+<td>1.057806</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>100</td>
+<td>10</td>
+<td>20</td>
+<td>Skip-Gram</td>
+<td>0.957117</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>100</td>
+<td>10</td>
+<td>5</td>
+<td>CBOW</td>
+<td>1.049821</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">123</td>
+<td>50</td>
+<td>8</td>
+<td>20</td>
+<td>Skip-Gram</td>
+<td>0.892788</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">124</td>
+<td>50</td>
+<td>8</td>
+<td>5</td>
+<td>CBOW</td>
+<td>1.024465</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">125</td>
+<td>50</td>
+<td>8</td>
+<td>5</td>
+<td>Skip-Gram</td>
+<td>0.834142</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">126</td>
+<td>50</td>
+<td>8</td>
+<td>8</td>
+<td>CBOW</td>
+<td>1.031018</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">127</td>
+<td>50</td>
+<td>8</td>
+<td>8</td>
+<td>Skip-Gram</td>
+<td>0.860637</td>
+</tr>
+</tbody>
+</table>
+
+<p>128 rows × 5 columns</p>
+</div>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
